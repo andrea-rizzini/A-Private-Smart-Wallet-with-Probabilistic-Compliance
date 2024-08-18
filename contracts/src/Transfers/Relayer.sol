@@ -7,25 +7,6 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-interface IOnboardingMixer {
-    function createCommitment(bytes32 _commitment) external payable;
-    function redeemCommitment(    
-        bytes calldata _proof,
-        bytes32 _root,
-        bytes32 _nullifierHash,
-        address payable _recipient
-    ) external payable;
-} 
-
-interface IPoolUsers {
-    struct Account_ {
-        address owner;
-        bytes publicKey;
-    }
-
-    function register(Account_ memory _account) external;
-}
-
 interface IUTXOsPool {
     struct ExtData {
     address recipient;
@@ -48,7 +29,7 @@ interface IUTXOsPool {
 
 // Account contract
 
-contract Account is IAccount {
+contract Relayer is IAccount {
 
     struct Call {
         address dest;
@@ -78,44 +59,6 @@ contract Account is IAccount {
         return owner == recovered ? 0 : 1; //return 0 if signature is valid, 1 otherwise
     }
 
-    function append_commitment(address contract_address, bytes32 _commitment, uint256 amount) external payable { // amount in wei
-        if (amount == 10000000000000000){         
-            require(address(this).balance >= 0.01 ether, "Insufficient funds"); 
-            IOnboardingMixer(contract_address).createCommitment{value: amount}(_commitment);
-        }
-        else if (amount == 100000000000000000){
-            require(address(this).balance >= 0.1 ether, "Insufficient funds");
-            IOnboardingMixer(contract_address).createCommitment{value: amount}(_commitment);
-        }
-        else if (amount == 1000000000000000000){
-            require(address(this).balance >= 1 ether, "Insufficient funds");
-            IOnboardingMixer(contract_address).createCommitment{value: amount}(_commitment);
-        }
-        else if (amount == 1000000000000000000){
-            require(address(this).balance >= 10 ether, "Insufficient funds");
-            IOnboardingMixer(contract_address).createCommitment{value: amount}(_commitment);
-        }
-    }
-
-    function redeem_commitment(
-        address contract_address,
-        bytes calldata _proof,
-        bytes32 _root,
-        bytes32 _nullifierHash,
-        address payable _recipient
-    ) external payable {
-        IOnboardingMixer(contract_address).redeemCommitment(_proof, _root, _nullifierHash, _recipient);
-    }
-
-     function insertIntoPoolUsers(address poolUsersContract, bytes memory publicKey) public {
-        IPoolUsers.Account_ memory account_ = IPoolUsers.Account_({
-            owner: address(this),
-            publicKey: publicKey
-        });
-
-        IPoolUsers(poolUsersContract).register(account_);
-    }
-
     function callTransact(
         address poolAddress,
         IUTXOsPool.Proof memory _proofArgs,
@@ -131,7 +74,7 @@ contract AccountFactory {
     function createAccount(address owner) external returns (address) {
 
         bytes32 salt = bytes32(uint256(uint160(owner)));
-        bytes memory bytecode = abi.encodePacked(type(Account).creationCode, abi.encode(owner));
+        bytes memory bytecode = abi.encodePacked(type(Relayer).creationCode, abi.encode(owner));
 
         address addr = Create2.computeAddress(salt, keccak256(bytecode));
         uint256 codeSize = addr.code.length;

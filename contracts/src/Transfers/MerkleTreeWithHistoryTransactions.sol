@@ -9,16 +9,10 @@ interface IHasher {
 
 contract MerkleTreeWithHistory is Initializable {
   uint256 public constant FIELD_SIZE = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
-  uint256 public constant ZERO_VALUE = 21663839004416932945382355908790599225266501822907911457504978515578255421292; // = keccak256("tornado") % FIELD_SIZE
 
   IHasher public immutable hasher;
   uint32 public immutable levels;
 
-  // the following variables are made public for easier testing and debugging and
-  // are not supposed to be accessed in regular code
-
-  // filledSubtrees and roots could be bytes32[size], but using mappings makes it cheaper because
-  // it removes index range check on every interaction
   mapping(uint256 => bytes32) public filledSubtrees;
   mapping(uint256 => bytes32) public roots;
   uint32 public constant ROOT_HISTORY_SIZE = 100;
@@ -40,19 +34,16 @@ contract MerkleTreeWithHistory is Initializable {
     roots[0] = zeros(levels);
   }
 
-  /**
-    @dev Hash 2 tree leaves, returns Poseidon(_left, _right)
-  */
   function hashLeftRight(bytes32 _left, bytes32 _right) public view returns (bytes32) {
     require(uint256(_left) < FIELD_SIZE, "_left should be inside the field");
     require(uint256(_right) < FIELD_SIZE, "_right should be inside the field");
     bytes32[2] memory input;
     input[0] = _left;
     input[1] = _right;
-    return hasher.poseidon(input);
+    return hasher.poseidon(input); 
   }
 
-  // Modified to insert pairs of leaves for better efficiency
+  // this inserts pairs of leaves for better efficiency, since we have 2 outputs we insert them both at the same time
   function _insert(bytes32 _leaf1, bytes32 _leaf2) internal returns (uint32 index) {
     uint32 _nextIndex = nextIndex;
     require(_nextIndex != uint32(2)**levels, "Merkle tree is full. No more leaves can be added");
@@ -80,10 +71,7 @@ contract MerkleTreeWithHistory is Initializable {
     nextIndex = _nextIndex + 2;
     return _nextIndex;
   }
-
-  /**
-    @dev Whether the root is present in the root history
-  */
+  
   function isKnownRoot(bytes32 _root) public view returns (bool) {
     if (_root == 0) {
       return false;
@@ -102,14 +90,11 @@ contract MerkleTreeWithHistory is Initializable {
     return false;
   }
 
-  /**
-    @dev Returns the last root
-  */
+  // return the last root inserted
   function getLastRoot() public view returns (bytes32) {
     return roots[currentRootIndex];
   }
 
-  /// @dev provides Zero (Empty) elements for a MiMC MerkleTree. Up to 32 levels
   function zeros(uint256 i) public pure returns (bytes32) {
     if (i == 0) return bytes32(0x2fe54c60d3acabf3343a35b6eba15db4821b340f76e741e2249685ed4899af6c);
     else if (i == 1) return bytes32(0x1a332ca2cd2436bdc6796e6e4244ebf6f7e359868b7252e55342f766e4088082);

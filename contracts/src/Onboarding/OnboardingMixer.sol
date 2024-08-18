@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./MerkleTreeWithHistoryOnboarding.sol";
 
 interface IVerifier {
-  function verifyProof(bytes memory _proof, uint256[6] memory _input) external returns (bool);
+  function verifyProof(bytes memory _proof, uint256[2] memory _input) external returns (bool);
 }
 
 contract OnboardingMixer is MerkleTreeWithHistory, ReentrancyGuard {
@@ -65,10 +65,7 @@ contract OnboardingMixer is MerkleTreeWithHistory, ReentrancyGuard {
     bytes calldata _proof,
     bytes32 _root,
     bytes32 _nullifierHash,
-    address payable _recipient,
-    address payable _relayer,
-    uint256 _fee,
-    uint256 _refund      
+    address payable _recipient   
   ) external payable nonReentrant {
     require(!nullifierHashes[_nullifierHash], "The note has been already spent");
     require(isKnownRoot(_root), "Cannot find your merkle root"); 
@@ -76,7 +73,7 @@ contract OnboardingMixer is MerkleTreeWithHistory, ReentrancyGuard {
     require(
       verifier.verifyProof(
         _proof,
-        [uint256(_root), uint256(_nullifierHash), uint256(uint160(address(_recipient))), uint256(uint160(address(_relayer))), _fee, _refund]
+        [uint256(_root), uint256(_nullifierHash)]
       ),
       "Invalid withdraw proof"
     );

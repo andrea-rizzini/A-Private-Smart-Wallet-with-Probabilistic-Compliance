@@ -4,7 +4,7 @@ pragma solidity ^0.8.12;
 // import "hardhat/console.sol";
 
 interface IHasher {
-  function MiMCSponge(uint256 in_xL, uint256 in_xR) external pure returns (uint256 xL, uint256 xR);
+  function MiMCSponge(uint256 in_xL, uint256 in_xR, uint256 k) external pure returns (uint256 xL, uint256 xR);
 }
 
 contract MerkleTreeWithHistory {
@@ -50,9 +50,9 @@ contract MerkleTreeWithHistory {
     require(uint256(_right) < FIELD_SIZE, "_right should be inside the field");
     uint256 R = uint256(_left);
     uint256 C = 0;
-    (R, C) = _hasher.MiMCSponge(R, C); // todo: k to be chosen uniformly at random
+    (R, C) = _hasher.MiMCSponge(R, C, 0); // todo: k to be chosen uniformly at random
     R = addmod(R, uint256(_right), FIELD_SIZE);
-    (R, C) = _hasher.MiMCSponge(R, C);
+    (R, C) = _hasher.MiMCSponge(R, C, 0);
     return bytes32(R);
   }
 
