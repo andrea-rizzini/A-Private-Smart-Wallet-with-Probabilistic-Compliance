@@ -9,4 +9,4 @@ deleteChallenges();
 deleteMaskedCommitments();
 deleteNullifiers();
 
-deleteDir("apps/version3_flag_propagation_probabilistic/data");
+deleteDir("app/data");

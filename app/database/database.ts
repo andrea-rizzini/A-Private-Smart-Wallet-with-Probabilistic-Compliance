@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const dbDir = path.join(__dirname, '../data');
-const dbPath = path.join(dbDir, 'version3_flag_propagation_probabilistic.db');
+const dbPath = path.join(dbDir, 'probabilistic_compliance.db');
 
 if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });

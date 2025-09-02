@@ -205,7 +205,7 @@ export async function getProof({ inputs, outputs, tree, smt, eventsStatusTree, e
     outPubkey: outputs.map((x) => x.keypair.pubkey),
   }
   
-  let dirPath = path.join(__dirname, `../../../../circuits/artifacts/circuits/`);
+  let dirPath = path.join(__dirname, `../../../circuits/artifacts/circuits/`);
   let fileName = `transaction${inputs.length}.wasm`;
   let filePath = path.join(dirPath, fileName);
   let wasmBuffer = fs.readFileSync(filePath);
@@ -354,7 +354,7 @@ export async function getProofOnboarding({ inputs, outputs, tree, smt, eventsSta
     outPubkey: outputs.map((x) => x.keypair.pubkey),
   }
   
-  let dirPath = path.join(__dirname, `../../../../circuits/artifacts/circuits/`);
+  let dirPath = path.join(__dirname, `../../../circuits/artifacts/circuits/`);
   let fileName = `transaction${inputs.length}.wasm`;
   let filePath = path.join(dirPath, fileName);
   let wasmBuffer = fs.readFileSync(filePath);

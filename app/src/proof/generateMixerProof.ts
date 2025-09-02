@@ -72,7 +72,7 @@ export async function generateMixerProof({ deposit, account}: any) {
 
     console.log('\nGenerating SNARK proof');
 
-    let dirPath = path.join(__dirname, '../../../../circuits/artifacts/circuits/');
+    let dirPath = path.join(__dirname, '../../../circuits/artifacts/circuits/');
     let fileName = `withdraw.wasm`;
     let filePath = path.join(dirPath, fileName);
     let wasmBuffer = fs.readFileSync(filePath);

@@ -42,7 +42,7 @@ export async function setup(username: string, account: string, initCode: string,
         const output = new Utxo({ keypair })
 
         // register in poolUsers
-        await call_userop("contracts/src/FlagPropagationProbabilistic/AccountForV3Probabilistic.sol:Account", "insertIntoPoolUsers", [POOL_USERS_ADDRESS, output.keypair.address()], account , initCode, signer);
+        await call_userop("contracts/src/ProbabilisticCompliance/AccountForV3Probabilistic.sol:Account", "insertIntoPoolUsers", [POOL_USERS_ADDRESS, output.keypair.address()], account , initCode, signer);
 
         const index = getID(username);
 
@@ -141,7 +141,7 @@ export async function inviteUsingLink(name: string, account: string, initCode: s
         const signers = await hre.ethers.getSigners();
         const { args, proofsBloom, publicSignalsBloomArray, extData } = result;
         try {
-            await call_userop("contracts/src/FlagPropagationProbabilistic/RelayerForV3Probabilistic.sol:Relayer", "callTransact", [MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, args, proofsBloom, publicSignalsBloomArray, extData], RELAYER_V3_PROBABILISTIC_ADDRESS , INIT_CODE_RELAYER_V3_PROBABILISTIC, signers[3]); 
+            await call_userop("contracts/src/ProbabilisticCompliance/RelayerForV3Probabilistic.sol:Relayer", "callTransact", [MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, args, proofsBloom, publicSignalsBloomArray, extData], RELAYER_V3_PROBABILISTIC_ADDRESS , INIT_CODE_RELAYER_V3_PROBABILISTIC, signers[3]); 
             console.log(`\nTransfer of ${choiceAmount} USDC completed succesfully!\n`);
         }
         catch (error) {
@@ -283,7 +283,7 @@ export async function send(username: string, account: string, initCode: string, 
           const signers = await hre.ethers.getSigners();
           const { args, proofsBloom, publicSignalsBloomArray, extData } = result;
           try {
-            await call_userop("contracts/src/FlagPropagationProbabilistic/RelayerForV3Probabilistic.sol:Relayer", "callTransact", 
+            await call_userop("contracts/src/ProbabilisticCompliance/RelayerForV3Probabilistic.sol:Relayer", "callTransact", 
                               [MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, args, proofsBloom, publicSignalsBloomArray, extData], 
                               RELAYER_V3_PROBABILISTIC_ADDRESS, INIT_CODE_RELAYER_V3_PROBABILISTIC, signers[3]); 
             console.log(`\nTransfer of ${choiceAmount} USDC completed successfully!\n`);
@@ -365,7 +365,7 @@ export async function receive(signer: any, account: string, initCode: string) {
     if (result) {
         const { args, extData } = result;
         try {
-            await call_userop("contracts/src/FlagPropagationProbabilistic/AccountForV3Probabilistic.sol:Account", "callDeposit", [MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, args, extData], account , initCode, signer);
+            await call_userop("contracts/src/ProbabilisticCompliance/AccountForV3Probabilistic.sol:Account", "callDeposit", [MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, args, extData], account , initCode, signer);
             console.log(`\nFunded private amount with ${choiceAmount} USDC\n`)
         }
         catch (error) {
@@ -481,7 +481,7 @@ export async function withdraw(username: string, account: string, initCode: stri
         const { args, proofsBloom, publicSignalsBloomArray, extData } = result;
         try {
             
-            await call_userop("contracts/src/FlagPropagationProbabilistic/AccountForV3Probabilistic.sol:Account", "callWithdraw", [MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, args, proofsBloom, publicSignalsBloomArray, extData], account, initCode, signer);
+            await call_userop("contracts/src/ProbabilisticCompliance/AccountForV3Probabilistic.sol:Account", "callWithdraw", [MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, args, proofsBloom, publicSignalsBloomArray, extData], account, initCode, signer);
 
             console.log(`\nWithdrawal of ${choiceAmount} USDC completed succesfully!\n`);
         }

@@ -43,7 +43,7 @@ async function main() {
                 // const chainstateBitArray = createBitArray(FILTER_SIZE, indices);
                 // const value = bits2Num(chainstateBitArray);
 
-                let dirPath = path.join(__dirname, `../../../../circuits/artifacts/circuits/`);
+                let dirPath = path.join(__dirname, `../../../circuits/artifacts/circuits/`);
                 let fileName = `mask_commitment.wasm`;
                 let filePath = path.join(dirPath, fileName);
                 let wasmBuffer = fs.readFileSync(filePath);

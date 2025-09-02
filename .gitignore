@@ -1,0 +1,32 @@
+node_modules
+.env
+
+# Hardhat files
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+ignition/deployments/chain-31337
+
+# Apps files
+
+/app/links/*
+/app/cache/*
+/app/data/*
+/app/links/linkNote.json
+appspagation/links/linkNote.json
+
+# circuits files
+/circuits/artifacts/circuits/ptau18
+
+/circuits/artifacts/circuits/*
+
+/circuits/artifacts/circuits/*contracts/test/artifacts/ptau18

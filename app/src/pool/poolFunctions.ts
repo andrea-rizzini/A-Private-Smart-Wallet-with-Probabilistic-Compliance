@@ -24,9 +24,11 @@ const blockRange = 500;
 export async function getUtxoFromKeypair(senderKeyPair: Keypair, addressSender: string){
 
   // 1) fetch all nullifiers
-  const contract = await hre.ethers.getContractAt("contracts/src/FlagPropagationProbabilistic/MixerOnboardingAndTransfersV3Probabilistic.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
+  const contract = await hre.ethers.getContractAt("contracts/src/ProbabilisticCompliance/MixerOnboardingAndTransfersV3Probabilistic.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
   let filter = contract.filters.NewNullifier();
   let eventsNullifiers: any[] = [];
+
+  // todo: change this code-block removing rpc from Alchemy. Try this one: https://base-rpc.publicnode.com/
 
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
@@ -96,9 +98,11 @@ export async function getUtxoFromKeypair(senderKeyPair: Keypair, addressSender: 
 export async function getOnbUtxoFromKeypair(senderKeyPair: Keypair, addressSender: string){ 
   
   // 1) fetch all nullifiers
-  const contract = await hre.ethers.getContractAt("contracts/src/FlagPropagationProbabilistic/MixerOnboardingAndTransfersV3Probabilistic.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
+  const contract = await hre.ethers.getContractAt("contracts/src/ProbabilisticCompliance/MixerOnboardingAndTransfersV3Probabilistic.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
   let filter = contract.filters.NewNullifier();
   let eventsNullifiers: any[] = [];
+
+  // todo: change this code-block removing rpc from Alchemy
 
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
@@ -166,6 +170,8 @@ export async function getOnbUtxoFromKeypair(senderKeyPair: Keypair, addressSende
 export async function getAccountAddress(account: string): Promise<string | undefined> {
   const contract = await hre.ethers.getContractAt("PoolUsers", contractAddress);
   const filter = contract.filters.PublicKey();
+
+  // todo: change this code-block removing rpc from Alchemy
 
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
@@ -451,9 +457,11 @@ async function prepareTransaction({
 }
 
 async function fetchCommitments(): Promise<CommitmentEvents>{
-  const contract = await hre.ethers.getContractAt("contracts/src/FlagPropagation/MixerOnboardingAndTransfersV3.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
+  const contract = await hre.ethers.getContractAt("contracts/src/ProbabilisticCompliance/MixerOnboardingAndTransfersV3Probabilistic.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
   const filter = contract.filters.NewCommitmentV2();
   const commitments: CommitmentEvents = [];
+
+  // todo: change this code-block removing rpc from Alchemy
 
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
@@ -483,8 +491,10 @@ async function fetchCommitments(): Promise<CommitmentEvents>{
 
 
 async function fetchStatusTreeEvents(): Promise<StatusTreeEvents> {
-  const contract = await hre.ethers.getContractAt("contracts/src/FlagPropagation/MixerOnboardingAndTransfersV3.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
+  const contract = await hre.ethers.getContractAt("contracts/src/ProbabilisticCompliance/MixerOnboardingAndTransfersV3Probabilistic.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC);
   const filter = contract.filters.StatusFlagged();
+
+  // todo: change this code-block removing rpc from Alchemy
 
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
@@ -522,7 +532,7 @@ export async function createOnboardingData(params: CreateTransactionParams, keyp
 
 export async function createTransactionData(params: CreateTransactionParams, keypair: Keypair, signer: any, address ?: string){
   if (!params.inputs || !params.inputs.length) { // enter here for the deposit
-    const contract = await hre.ethers.getContractAt("contracts/src/FlagPropagation/MixerOnboardingAndTransfersV3.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, signer);
+    const contract = await hre.ethers.getContractAt("contracts/src/ProbabilisticCompliance/MixerOnboardingAndTransfersV3Probabilistic.sol:MixerOnboardingAndTransfers", MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC, signer);
     const root = await contract.getLastRoot_(); // take the last root, used in prepareTransaction to skip off-chain tree construction
 
     params.events = []
