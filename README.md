@@ -38,7 +38,7 @@ Deploy ```MixerOnboardingAndTransfersV3Probabilistic``` using ```npx hardhat run
 Note: a ```.db``` file will be created inside ```/app/data/```;  if you want initialize a new database, you just have to execute the script ```npx hardhat run ./app/database/deleteDB.ts``` and execute again the command above.
 
 # Demo:
-You will need 3 terminals, T1, T2 and T3.
+You will need 3 terminals, T1, T2 and T3.  
 First of all I suggest to get a fresh deploy running ```./new_deploy.sh```. 
 1) (T1): ```npx hardhat run app/main.ts```  
 2) (T1): type ```1```, type ```testnet``` and choose username (Alice) and password for your account: you will be fund in seconds with 0.01 USDC from the faucet.
