@@ -23,14 +23,25 @@ async function main () {
 
     const mixer_onb_and_transf_V3 = await mixer.deploy(VERIFIER_2, VERIFIER_16,  VERIFIER_MASKED_COMMITMENT, VERIFIER_NON_MEMBERSHIP_BLOOM, HASHER_TRANSFERS, HASHER_POSEIDON_3_INPUTS, USDC_ADDRESS, 20, AUTHORITY_ADDRESS);
     await mixer_onb_and_transf_V3.waitForDeployment();
-    console.log(`Mixer for oboarding and transfers V3 probabilistic deployed at: ${mixer_onb_and_transf_V3.target}`);
-    envConfig.MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC = mixer_onb_and_transf_V3.target.toString();
+    console.log(`Mixer for oboarding and transfers probabilistic deployed at: ${mixer_onb_and_transf_V3.target}`);
+    
+    const receipt = await mixer_onb_and_transf_V3.deploymentTransaction()?.wait();
+    const deployBlock = receipt?.blockNumber;
+    console.log(`Mixer for onboarding and transfers deployed at block: ${deployBlock}`);
 
-    //verify the contract
-    // await run("verify:verify", {
-    //     address: mixer_onb_and_transf_V3.target,
-    //     constructorArguments: [VERIFIER_2, VERIFIER_16,  VERIFIER_MASKED_COMMITMENT, VERIFIER_NON_MEMBERSHIP_BLOOM, HASHER_TRANSFERS, HASHER_POSEIDON_3_INPUTS, USDC_ADDRESS, 20, AUTHORITY_ADDRESS]
-    // });
+    envConfig.MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC = mixer_onb_and_transf_V3.target.toString();
+    if (deployBlock) {
+      envConfig.MIXER_ONBOARDING_AND_TRANSFERS_DEPLOY_BLOCK = deployBlock.toString();
+    }
+
+    try {
+        await run("verify:verify", {
+            address: mixer_onb_and_transf_V3.target,
+            constructorArguments: [],
+        });
+    } catch (err: any) {
+        console.error(`Already verified`);
+    }
     
     // write new addresses to .env file
     const updatedEnv = Object.entries(envConfig).map(([key, value]) => `${key}=${value}`).join('\n');

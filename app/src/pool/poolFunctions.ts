@@ -15,11 +15,15 @@ const contractAddress = process.env.POOL_USERS_ADDRESS || '';
 const MERKLE_TREE_HEIGHT = 20;
 const MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC = process.env.MIXER_ONBOARDING_AND_TRANSFERS_V3_PROBABILISTIC || '';
 
-const startBlock = process.env.POOL_USERS_DEPLOY_BLOCK
+const startBlock_pool = process.env.POOL_USERS_DEPLOY_BLOCK
   ? parseInt(process.env.POOL_USERS_DEPLOY_BLOCK)
   : 0
 
-const blockRange = 500; 
+const startBlock_mixer = process.env.MIXER_ONBOARDING_AND_TRANSFERS_DEPLOY_BLOCK
+  ? parseInt(process.env.MIXER_ONBOARDING_AND_TRANSFERS_DEPLOY_BLOCK)
+  : 0
+
+const blockRange = 45000; // 500 (Alchemy) --> 50000 (PublicNode)
 
 export async function getUtxoFromKeypair(senderKeyPair: Keypair, addressSender: string){
 
@@ -28,11 +32,9 @@ export async function getUtxoFromKeypair(senderKeyPair: Keypair, addressSender: 
   let filter = contract.filters.NewNullifier();
   let eventsNullifiers: any[] = [];
 
-  // todo: change this code-block removing rpc from Alchemy. Try this one: https://base-rpc.publicnode.com/
-
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
-  for (let i = startBlock; i <= endBlock; i += blockRange) {
+  for (let i = startBlock_mixer; i <= endBlock; i += blockRange) {
     const fromBlock = i;
     const toBlock = Math.min(i + blockRange - 1, endBlock);
     const events = await contract.queryFilter(filter, fromBlock, toBlock);
@@ -43,7 +45,7 @@ export async function getUtxoFromKeypair(senderKeyPair: Keypair, addressSender: 
   // 2) fetch all commitment events
   filter = contract.filters.NewCommitmentV2();
   let eventsCommitments: any[] = [];
-  for (let i = startBlock; i <= endBlock; i += blockRange) {
+  for (let i = startBlock_mixer; i <= endBlock; i += blockRange) {
     const fromBlock = i;
     const toBlock = Math.min(i + blockRange - 1, endBlock);
     const events = await contract.queryFilter(filter, fromBlock, toBlock);
@@ -102,11 +104,9 @@ export async function getOnbUtxoFromKeypair(senderKeyPair: Keypair, addressSende
   let filter = contract.filters.NewNullifier();
   let eventsNullifiers: any[] = [];
 
-  // todo: change this code-block removing rpc from Alchemy
-
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
-  for (let i = startBlock; i <= endBlock; i += blockRange) {
+  for (let i = startBlock_mixer; i <= endBlock; i += blockRange) {
     const fromBlock = i;
     const toBlock = Math.min(i + blockRange - 1, endBlock);
     const events = await contract.queryFilter(filter, fromBlock, toBlock);
@@ -117,7 +117,7 @@ export async function getOnbUtxoFromKeypair(senderKeyPair: Keypair, addressSende
   // 2) fetch all commitment events
   filter = contract.filters.NewCommitmentV2();
   let eventsCommitments: any[] = [];
-  for (let i = startBlock; i <= endBlock; i += blockRange) {
+  for (let i = startBlock_mixer; i <= endBlock; i += blockRange) {
     const fromBlock = i;
     const toBlock = Math.min(i + blockRange - 1, endBlock);
     const events = await contract.queryFilter(filter, fromBlock, toBlock);
@@ -171,11 +171,9 @@ export async function getAccountAddress(account: string): Promise<string | undef
   const contract = await hre.ethers.getContractAt("PoolUsers", contractAddress);
   const filter = contract.filters.PublicKey();
 
-  // todo: change this code-block removing rpc from Alchemy
-
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
-  for (let i = startBlock; i <= endBlock; i += blockRange) {
+  for (let i = startBlock_pool; i <= endBlock; i += blockRange) {
     const fromBlock = i;
     const toBlock = Math.min(i + blockRange - 1, endBlock);
 
@@ -465,7 +463,7 @@ async function fetchCommitments(): Promise<CommitmentEvents>{
 
   const endBlock = await hre.ethers.provider.getBlockNumber();
 
-  for (let i = startBlock; i <= endBlock; i += blockRange) {
+  for (let i = startBlock_mixer; i <= endBlock; i += blockRange) {
     const fromBlock = i;
     const toBlock = Math.min(i + blockRange - 1, endBlock);
     const events = await contract.queryFilter(filter, fromBlock, toBlock);
@@ -500,7 +498,7 @@ async function fetchStatusTreeEvents(): Promise<StatusTreeEvents> {
 
   const statusTreeEvents: StatusTreeEvents = [];
 
-  for (let i = startBlock; i <= endBlock; i += blockRange) {
+  for (let i = startBlock_mixer; i <= endBlock; i += blockRange) {
     const fromBlock = i;
     const toBlock = Math.min(i + blockRange - 1, endBlock);
 

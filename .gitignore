@@ -30,3 +30,5 @@ appspagation/links/linkNote.json
 /circuits/artifacts/circuits/*
 
 /circuits/artifacts/circuits/*contracts/test/artifacts/ptau18
+
+/test_rpc.ts

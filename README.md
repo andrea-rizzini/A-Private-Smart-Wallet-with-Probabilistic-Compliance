@@ -12,8 +12,7 @@ When calling the insert function on the SMT contract, the proof πmask will be a
 
 # Quickstart:
 1) ```npm i``` on the root of the project
-2) Make sure to have as many private keys as you need and add them to the .env file  
-To test the demo you need: two users, a faucet and a relayer; hence at least four private keys
+2) Make sure to have as many private keys as you need and add them to the ```.env``` file. You can start filling ```.env_sample``` and copying its content into the ```.env``` file.  
 3) Make sure to have enough funds on your faucet
 4) Circuits setup:  
 ```cd circuits```  
@@ -39,8 +38,8 @@ Deploy ```MixerOnboardingAndTransfersV3Probabilistic``` using ```npx hardhat run
 Note: a ```.db``` file will be created inside ```/app/data/```;  if you want initialize a new database, you just have to execute the script ```npx hardhat run ./app/database/deleteDB.ts``` and execute again the command above.
 
 # Demo:
-You need 3 terminals, T1, T2 and T3.
-First of all I suggest to delete the old database (if previous usage) and create a new one. Then I also suggest to make a new deploy for the paymaster, account factories and mixer contracts, in order to get a fresh setup. 
+You will need 3 terminals, T1, T2 and T3.
+First of all I suggest to get a fresh deploy running ```./new_deploy.sh```. 
 1) (T1): ```npx hardhat run app/main.ts```  
 2) (T1): type ```1```, type ```testnet``` and choose username (Alice) and password for your account: you will be fund in seconds with 0.01 USDC from the faucet.
 3) (T1): type  ```1``` to check your smart contract address and your private balance

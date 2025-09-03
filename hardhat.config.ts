@@ -9,7 +9,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {},
     base: {
-      url: process.env.RPC_URL_BASE_SEPOLIA!,
+      url: process.env.RPC_URL_BASE_SEPOLIA_PUBLIC_NODE!,
       accounts: [
         process.env.PRIVATE_KEY_ALICE!,
         process.env.PRIVATE_KEY_BOB!,
@@ -24,7 +24,7 @@ const config: HardhatUserConfig = {
       ],
     },
     arb: {
-      url: process.env.RPC_URL_ARBITRUM_SEPOLIA!,
+      url: process.env.RPC_URL_ARBITRUM_SEPOLIA_ALCHEMY!,
       accounts: [
         process.env.PRIVATE_KEY_ALICE!,
         process.env.PRIVATE_KEY_BOB!,

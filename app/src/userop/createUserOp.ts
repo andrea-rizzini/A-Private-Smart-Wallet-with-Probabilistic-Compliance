@@ -1,7 +1,11 @@
 import hre from 'hardhat';
+import { JsonRpcProvider } from "ethers";
 
 const EP_ADDRESS: string = process.env.ENTRY_POINT_ADDRESS || '';
 const PAYMASTER_ADDRESS: string = process.env.PAYMASTER_ADDRESS || '';
+const ALCHEMY_RPC = process.env.RPC_URL_BASE_SEPOLIA_ALCHEMY || "";
+const BUNDLER_RPC = process.env.RPC_URL_BASE_SEPOLIA_ALCHEMY || "";
+const provider = new JsonRpcProvider(BUNDLER_RPC, { name: "base", chainId: 84532 });
 
 export async function call_userop(contract:string, function_name: string, args: any[], sender: string, initCode: string, signer: any) {
 
@@ -26,7 +30,7 @@ export async function call_userop(contract:string, function_name: string, args: 
     maxPriorityFeePerGas: "0x0",
   };
   const { preVerificationGas, verificationGasLimit, callGasLimit } =
-    await hre.ethers.provider.send("eth_estimateUserOperationGas", [
+    await provider.send("eth_estimateUserOperationGas", [
       userOp,
       EP_ADDRESS,
     ]);
@@ -34,17 +38,17 @@ export async function call_userop(contract:string, function_name: string, args: 
   userOp.preVerificationGas = preVerificationGas;
   userOp.verificationGasLimit = verificationGasLimit;
   userOp.callGasLimit = callGasLimit;
-  const { maxFeePerGas } = await hre.ethers.provider.getFeeData();
+  const { maxFeePerGas } = await provider.getFeeData();
   userOp.maxFeePerGas = maxFeePerGas ? "0x" + maxFeePerGas.toString(16) : "0x0";
 
-  const maxPriorityFeePerGas = await hre.ethers.provider.send(
-    "rundler_maxPriorityFeePerGas"
+  const maxPriorityFeePerGas = await provider.send(
+    "rundler_maxPriorityFeePerGas", []
   );
   userOp.maxPriorityFeePerGas = maxPriorityFeePerGas;
 
   const userOpHash = await ep.getUserOpHash(userOp); // except the signature
   userOp.signature = await signer.signMessage(hre.ethers.getBytes(userOpHash)); // we sign the hash of the userOp itself, that is unqiue; in this way we avoid replay attacks
-  const opHash = await hre.ethers.provider.send("eth_sendUserOperation", [
+  const opHash = await provider.send("eth_sendUserOperation", [
     userOp, // userOp object   
     EP_ADDRESS, // The entrypoint address the request should be sent through. 
   ]);
